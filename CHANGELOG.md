@@ -1,3 +1,6 @@
+# 0.3.0
+- Log also in the terminal when logging to a file when env var `log` is set to `print`
+
 # 0.2.0
 - Writing to a log file 
 - reduced code size
