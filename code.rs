@@ -60,6 +60,17 @@ fn rust_logging_print(msg: &str, msg_type: MessageTypes, log_type: LogTypes) {
                     return;
                 }
             };
+
+            // get env var LOG
+            let log_env = match std::env::var("LOG") {
+                Ok(log_env) => log_env,
+                Err(_) => "".to_string(),
+            };
+
+            // if LOG is set to print then print to the terminal
+            if log_env == "print" {
+                println!("{}", msg);
+            }
         },
         LogTypes::Terminal => {
             let color = match msg_type {

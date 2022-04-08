@@ -98,6 +98,27 @@ ferror("This is an : error message");
 
 ![](images/5.png)
 
+## also logging to terminal when logging to file 📄
+
+You can set environment variable `LOG` to `print` to also log to the terminal when logging to a file.
+
+```bash
+LOG=print [program]
+
+#########
+# PROGRAM SOURCE CODE #
+# ferror("This is an : error message");
+#########
+
+[Terminal output] : 
+
+This is an : error message
+
+#########
+# LOGFILE CONTENT #
+# This is an : error message
+#########
+```
 
 # Copy/paste 📋
 
