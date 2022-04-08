@@ -18,6 +18,7 @@ This code provides the following functions:
 - 🔴 **error()**: Prints an error message.
 - 🔵 **info()**: Prints an information message.
 - 🟢 **success()**: Prints a success message.
+- ℹ️ Add a `f` before the function name to print the message to the log file
 
 Each function takes a single parameter, which is the message to be printed.
 
@@ -78,10 +79,30 @@ const WARNING_ICON: &str = "[ ⚠️ ]";
 
 ![](images/4.png)
 
+## Log file 📄
+
+You can specify the log file path to write the messages to with the `LOG_FILE` constant.
+
+Use the `f` prefix before the function name to print the message to the log file.
+
+```rust
+const LOG_FILE: &str = "myProgram.log";
+
+// -----------------------------
+
+fwarning("This is a : warning message");
+fsuccess("This is a : success message");
+finfo("This is an : information message");
+ferror("This is an : error message");
+```
+
+![](images/5.png)
+
+
 # Copy/paste 📋
 
 ```rust
-// PARAMETERS:
+/// PARAMETERS:
 
 const ICON_CONNECTOR: &str = "->";      // connector between icon and message
 const ERROR_ICON: &str = "[ x ]";       // icon for errors
@@ -89,6 +110,7 @@ const INFO_ICON: &str = "[ i ]";        // icon for informations
 const SUCCESS_ICON: &str = "[ v ]";     // icon for success
 const WARNING_ICON: &str = "[ ! ]";     // icon for warnings
 const HIGHLIGHT: bool = true;           // should the text after ":" be highlighted
+const LOG_FILE: &str = "myProgram.log";       // file to log to
 
 // ---------------
 
@@ -102,117 +124,108 @@ const BG_RED: &str = "\x1b[41m";
 const BG_CYAN: &str = "\x1b[46m";
 const BG_GREEN: &str = "\x1b[42m";
 const BG_YELLOW: &str = "\x1b[43m";
-
+use std::fs::OpenOptions;
+use std::io::Write;
+enum MessageTypes {
+    ERROR,
+    INFO,
+    SUCCESS,
+    WARNING,
+}
+enum LogTypes { 
+    Terminal, 
+    File,
+}
+fn rust_logging_print(msg: &str, msg_type: MessageTypes, log_type: LogTypes) {
+    let msg = String::from(msg);
+    let icon = match msg_type {
+        MessageTypes::ERROR => ERROR_ICON,
+        MessageTypes::INFO => INFO_ICON,
+        MessageTypes::SUCCESS => SUCCESS_ICON,
+        MessageTypes::WARNING => WARNING_ICON,
+    };
+    match log_type {
+        LogTypes::File => {
+            let mut file = match OpenOptions::new()
+                .write(true)
+                .append(true)
+                .create(true)
+                .open(LOG_FILE) {
+                    Ok(file) => file,
+                    Err(e) => {
+                        println!("{}Cannot open log file : {}{}", RED, e, RESET);
+                        return;
+                    }
+                };
+            match file.write_all(format!("{} {} {}\n", icon,  ICON_CONNECTOR, msg).as_bytes()) {
+                Ok(_) => {},
+                Err(e) => {
+                    println!("{}Cannot write to log file : {}{}", RED, e, RESET);
+                    return;
+                }
+            };
+        },
+        LogTypes::Terminal => {
+            let color = match msg_type {
+                MessageTypes::ERROR => RED,
+                MessageTypes::INFO => CYAN,
+                MessageTypes::SUCCESS => GREEN,
+                MessageTypes::WARNING => YELLOW,
+            };
+            let bg_color = match msg_type {
+                MessageTypes::ERROR => BG_RED,
+                MessageTypes::INFO => BG_CYAN,
+                MessageTypes::SUCCESS => BG_GREEN,
+                MessageTypes::WARNING => BG_YELLOW,
+            };
+            let mut msg_vec = msg.split(":").collect::<Vec<&str>>();
+            println!(
+                "{}{} {} {}{}{}",
+                color,
+                icon,
+                ICON_CONNECTOR,
+                msg_vec.remove(0),
+                if msg_vec.len() > 0 {
+                    format!(
+                        ":{}{} ",
+                        if HIGHLIGHT {
+                            format!(" {}{}", bg_color, WHITE)
+                        } else {
+                            "".to_string()
+                        },
+                        msg_vec.join(":")
+                    )
+                } else {
+                    "".to_string()
+                },
+                RESET
+            );
+        }
+    }
+}
 fn warn(msg: &str) {
-    let msg = String::from(msg);
-
-    let mut msg_vec = msg.split(":").collect::<Vec<&str>>();
-
-    println!(
-        "{}{} {} {}{}{}",
-        YELLOW,
-        WARNING_ICON,
-        ICON_CONNECTOR,
-        msg_vec.remove(0),
-        if msg_vec.len() > 0 {
-            format!(
-                ":{}{} ",
-                if HIGHLIGHT {
-                    format!(" {}{}", BG_YELLOW, WHITE)
-                } else {
-                    "".to_string()
-                },
-                msg_vec.join(":")
-            )
-        } else {
-            "".to_string()
-        },
-        RESET
-    );
+    rust_logging_print(msg, MessageTypes::WARNING, LogTypes::Terminal);
 }
-
 fn success(msg: &str) {
-    let msg = String::from(msg);
-
-    let mut msg_vec = msg.split(":").collect::<Vec<&str>>();
-
-    println!(
-        "{}{} {} {}{}{}",
-        GREEN,
-        SUCCESS_ICON,
-        ICON_CONNECTOR,
-        msg_vec.remove(0),
-        if msg_vec.len() > 0 {
-            format!(
-                ":{}{} ",
-                if HIGHLIGHT {
-                    format!(" {}{}", BG_GREEN, WHITE)
-                } else {
-                    "".to_string()
-                },
-                msg_vec.join(":")
-            )
-        } else {
-            "".to_string()
-        },
-        RESET
-    );
+    rust_logging_print(msg, MessageTypes::SUCCESS, LogTypes::Terminal);
 }
-
 fn info(msg: &str) {
-    let msg = String::from(msg);
-
-    let mut msg_vec = msg.split(":").collect::<Vec<&str>>();
-
-    println!(
-        "{}{} {} {}{}{}",
-        CYAN,
-        INFO_ICON,
-        ICON_CONNECTOR,
-        msg_vec.remove(0),
-        if msg_vec.len() > 0 {
-            format!(
-                ":{}{} ",
-                if HIGHLIGHT {
-                    format!(" {}{}", BG_CYAN, WHITE)
-                } else {
-                    "".to_string()
-                },
-                msg_vec.join(":")
-            )
-        } else {
-            "".to_string()
-        },
-        RESET
-    );
+    rust_logging_print(msg, MessageTypes::INFO, LogTypes::Terminal);
 }
-
 fn error(msg: &str) {
-    let msg = String::from(msg);
-
-    let mut msg_vec = msg.split(":").collect::<Vec<&str>>();
-
-    eprintln!(
-        "{}{} {} {}{}{}",
-        RED,
-        ERROR_ICON,
-        ICON_CONNECTOR,
-        msg_vec.remove(0),
-        if msg_vec.len() > 0 {
-            format!(
-                ":{}{} ",
-                if HIGHLIGHT {
-                    format!(" {}{}", BG_RED, WHITE)
-                } else {
-                    "".to_string()
-                },
-                msg_vec.join(":")
-            )
-        } else {
-            "".to_string()
-        },
-        RESET
-    );
+    rust_logging_print(msg, MessageTypes::ERROR, LogTypes::Terminal);
+}
+fn fwarning(msg: &str) {
+    rust_logging_print(msg, MessageTypes::WARNING, LogTypes::File);
+}
+fn fsuccess(msg: &str) {
+    rust_logging_print(msg, MessageTypes::SUCCESS, LogTypes::File);
+}
+fn finfo(msg: &str) {
+    rust_logging_print(msg, MessageTypes::INFO, LogTypes::File);
+}
+fn ferror(msg: &str) {
+    rust_logging_print(msg, MessageTypes::ERROR, LogTypes::File);
 }
 ```
 
