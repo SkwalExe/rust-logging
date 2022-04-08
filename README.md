@@ -123,7 +123,7 @@ This is an : error message
 # Copy/paste 📋
 
 ```rust
-/// PARAMETERS:
+// PARAMETERS:
 
 const ICON_CONNECTOR: &str = "->";      // connector between icon and message
 const ERROR_ICON: &str = "[ x ]";       // icon for errors
@@ -185,6 +185,17 @@ fn rust_logging_print(msg: &str, msg_type: MessageTypes, log_type: LogTypes) {
                     return;
                 }
             };
+
+            // get env var LOG
+            let log_env = match std::env::var("LOG") {
+                Ok(log_env) => log_env,
+                Err(_) => "".to_string(),
+            };
+
+            // if LOG is set to print then print to the terminal
+            if log_env == "print" {
+                println!("{}", msg);
+            }
         },
         LogTypes::Terminal => {
             let color = match msg_type {
