@@ -1,3 +1,6 @@
+# 1.0.0
+- Convert project to crate 🎉
+
 # 0.3.0
 - Log also in the terminal when logging to a file when env var `log` is set to `print`
 

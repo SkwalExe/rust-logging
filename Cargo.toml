@@ -1,0 +1,18 @@
+[package]
+name = "rust_logging"
+version = "1.0.0"
+edition = "2021"
+authors = ["Léopold Koprivnik Ibghy, @SkwalExe <skwal.net@gmail.com>"]
+description = "A couple of functions to make logging in Rust easier."
+documentation = "https://github.com/SkwalExe/rust-logging#readme"
+readme = "https://github.com/SkwalExe/rust-logging#readme"
+homepage = "https://github.com/SkwalExe/rust-logging"
+repository = "https://github.com/SkwalExe/rust-logging"
+license = "MIT"
+keywords = ["rust", "errors", "logging", "warnings", "informations", "successes", "skwalexe", "logging-rs", "rust-logging", "logger"]
+categories = ["logging", "logger", "logs"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+isatty="0.1.9"
