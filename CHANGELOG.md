@@ -1,3 +1,6 @@
+# 1.1.0
+- Allow custom colors
+
 # 1.0.0
 - Convert project to crate 🎉
 
