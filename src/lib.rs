@@ -3,32 +3,40 @@ use std::default::Default;
 use std::fmt::Display;
 
 pub struct Colors {
-    red: String,
-    green: String,
-    yellow: String,
-    cyan: String,
-    white: String,
-    reset: String,
-    bg_red: String,
-    bg_cyan: String,
-    bg_green: String,
-    bg_yellow: String,
+    pub red: String,
+    pub green: String,
+    pub yellow: String,
+    pub cyan: String,
+    pub white: String,
+    pub reset: String,
+    pub bg_red: String,
+    pub bg_cyan: String,
+    pub bg_green: String,
+    pub bg_yellow: String,
+}
+
+impl Default for Colors {
+    fn default() -> Self {
+        Colors {
+            red: "\x1b[91m".to_string(),
+            green: "\x1b[92m".to_string(),
+            yellow: "\x1b[93m".to_string(),
+            cyan: "\x1b[96m".to_string(),
+            white: "\x1b[97m".to_string(),
+            reset: "\x1b[0m".to_string(),
+            bg_red: "\x1b[41m".to_string(),
+            bg_cyan: "\x1b[46m".to_string(),
+            bg_green: "\x1b[42m".to_string(),
+            bg_yellow: "\x1b[43m".to_string(),
+        }
+    }
 }
 
 impl Colors {
     pub fn new() -> Colors {
         if stderr_isatty() && stdout_isatty() {
             Colors {
-                red: "\x1b[91m".to_string(),
-                green: "\x1b[92m".to_string(),
-                yellow: "\x1b[93m".to_string(),
-                cyan: "\x1b[96m".to_string(),
-                white: "\x1b[97m".to_string(),
-                reset: "\x1b[0m".to_string(),
-                bg_red: "\x1b[41m".to_string(),
-                bg_cyan: "\x1b[46m".to_string(),
-                bg_green: "\x1b[42m".to_string(),
-                bg_yellow: "\x1b[43m".to_string(),
+                ..Default::default()
             }
         } else {
             Colors {

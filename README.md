@@ -9,7 +9,7 @@
 ```toml
 # Cargo.toml
 [dependencies]
-rust_logging = "1.0.0"
+rust_logging = "1.1.0"
 ```
 
 # Usage 📝
@@ -33,7 +33,7 @@ fn main() {
         log_file: "log.txt", // the file to log to when logging to a file
         highlight: true, // highlight text after ":" in the message
         ..Default::default() // the default values for the non specified settings
-    }
+    };
 
     let custom_logger = settings.get_logger();
 }
@@ -70,7 +70,7 @@ This can be disabled by setting the `highlight` field to `false` inside the cust
 let settings = LoggerOptions {
     highlight: false,
     ..Default::default()
-}
+};
 
 let logger = settings.get_logger();
 ```
@@ -116,12 +116,38 @@ let settings = LoggerOptions {
     info_icon: "ℹ️",
     success_icon: "✅",
     ..Default::default()
-}
+};
 
 let logger = settings.get_logger();
 ```
 
 ![](images/4.png)
+
+## Custom Colors 🎨
+
+You can change the colors of the messages by setting the `colors` field inside the custom settings.
+
+The value must be a `rust_logging::Colors` struct.
+
+```rust
+let my_colors = Colors {
+    // \x1b is the escape character (ASCII 27) and [xxm is the color 'code'
+    red: "\x1b[93m", // escape sequence for yellow foreground
+    bg_red: "\x1b[42m", // escape sequence for green background
+    ..Default::default()
+};
+
+let settings = LoggerOptions {
+    colors: my_colors,
+    ..Default::default()
+};
+
+let logger = settings.get_logger();
+
+logger.error("a command failed : hello");
+```
+
+![](images/6.png)
 
 ## Log file 📄
 

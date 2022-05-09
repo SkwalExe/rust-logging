@@ -1,6 +1,6 @@
 [package]
 name = "rust_logging"
-version = "1.0.0"
+version = "1.1.0"
 edition = "2021"
 authors = ["Léopold Koprivnik Ibghy, @SkwalExe <skwal.net@gmail.com>"]
 description = "A couple of functions to make logging in Rust easier."
@@ -10,7 +10,6 @@ homepage = "https://github.com/SkwalExe/rust-logging"
 repository = "https://github.com/SkwalExe/rust-logging"
 license = "MIT"
 keywords = ["rust",  "logging", "rust-logging", "logger"]
-categories = ["logging", "logger", "logs"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
